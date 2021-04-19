@@ -1,12 +1,12 @@
-{Este é um comentário
-de múltiplas linhas}
- 
-(*Este também pode ter
-mais de uma linha*)
- 
-//Este comentário só pode ser escrito em uma linha
-
-program Hello;
+program EXEMPLO1;
+var
+ A, B, MAIOR : integer;
 begin
-write('123','124ss',);
-end
+ write('Digite dois numeros: ');
+ readln(A, B);
+ MAIOR := A;
+ if (B > A) then
+ MAIOR:=B;
+ writeln('O maior dos numeros ',A,' e ',B,' e ',MAIOR);
+ readln;
+end.

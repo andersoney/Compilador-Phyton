@@ -130,5 +130,9 @@ dmypy.json
 
 
 
-parselog.txt
+parseloglexico.txt
+parselogsintatico.txt
 parsetab.py
+/material/
+/atividade2/
+/__pycache__/
