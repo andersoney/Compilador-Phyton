@@ -136,3 +136,5 @@ parsetab.py
 /material/
 /atividade2/
 /__pycache__/
+/compilador.rar
+/*.out
