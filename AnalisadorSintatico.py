@@ -31,10 +31,8 @@ class AnalisadorSintatico:
 
     def p_constante(self,p):
         """
-        constante : PLUS ID 
-                  | MINUS ID 
-                  | PLUS INTEGER
-                  | MINUS INTEGER
+        constante : positivo_e_negativo ID 
+                  | positivo_e_negativo INTEGER
         """
 
     def p_parte_de_definicao_de_tipos(self, p):
@@ -117,7 +115,7 @@ class AnalisadorSintatico:
     def p_parametros_formais(self,p):
         """
         parametros_formais : secao_de_parametros_formais 
-                           | secao_de_parametros_formais END_LINE parametros_formais
+                           | secao_de_parametros_formais parametros_formais
                            | 
         """
     def p_secao_de_parametros_formais(self,p):
@@ -166,12 +164,12 @@ class AnalisadorSintatico:
         """
     def p_comando_condicional_1(self,p):
         """
-        comando_condicional_1 : IF expressao THEN comandos
-                              | IF expressao THEN comandos ELSE comando
+        comando_condicional_1 : IF expressao THEN comando_composto
+                              | IF expressao THEN comando_composto ELSE comando_composto
         """
     def p_elementos_do_case(self,p):
         """
-        elementos_do_case : elemento_do_case
+        elementos_do_case : elemento_do_case END_LINE
                           | elemento_do_case END_LINE elementos_do_case
         """
     def p_comando_condicional_2(self,p):
@@ -182,16 +180,19 @@ class AnalisadorSintatico:
     def p_elemento_do_case(self,p):
         """
         elemento_do_case : constante
+                         | constante SEMICOLON comando
+                         | constante SEMICOLON comandos_compostos
                          | constante COMMA elemento_do_case SEMICOLON comandos
+                         | constante COMMA elemento_do_case SEMICOLON comandos_compostos
         """
     def p_comando_repetitivo_1(self,p):
         """
-        comando_repetitivo_1 : WHILE expressao DO comandos
+        comando_repetitivo_1 : WHILE expressao DO comandos_compostos
         """
     def p_comando_repetitivo_2(self,p):
         """
-        comando_repetitivo_2 : FOR ID ASSIGN expressao TO expressao DO comando
-                             | FOR ID ASSIGN expressao DOWNTO expressao DO comando
+        comando_repetitivo_2 : FOR ID ASSIGN expressao TO expressao DO comandos_compostos
+                             | FOR ID ASSIGN expressao DOWNTO expressao DO comandos_compostos
         """
     def p_comando_repetitivo_3(self,p):
         """
@@ -218,17 +219,19 @@ class AnalisadorSintatico:
                 | MAIOR_IGUAL
                 | MAIOR_QUE
         """
+    def p_positivo_e_negativo(self, p):
+        """
+        positivo_e_negativo : PLUS
+                            | MINUS
+                            | 
+        """
     def p_expressao_simples(self,p):
         """
         expressao_simples : termo
-                          | PLUS termo
-                          | MINUS termo
-                          | PLUS termo PLUS termo
-                          | PLUS termo MINUS termo
-                          | PLUS termo OR termo
-                          | MINUS termo PLUS termo
-                          | MINUS termo MINUS termo
-                          | MINUS termo OR termo
+                          | positivo_e_negativo termo
+                          | positivo_e_negativo termo PLUS termo
+                          | positivo_e_negativo termo MINUS termo
+                          | positivo_e_negativo termo OR termo
         """
     def p_termo(self,p):
         """
