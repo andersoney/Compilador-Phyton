@@ -7,178 +7,270 @@ def print_to_view(p):
 class AnalisadorSintatico:
     def p_s(self, p):
         """
-        s : program_declaration s
-          | comentario s
-          | 
+        s : PROGRAM ID END_LINE bloco
         """
-    def p_program_declaration(self,p):
+    def p_bloco(self,p):
         """
-        program_declaration : PROGRAM func_name END_LINE declaration_var END_LINE program
+        bloco : comandos_compostos
+              | parte_de_definicao_de_constante
+              | parte_de_definicao_de_tipos
+              | parte_de_definicao_de_variaveis
+              | parte_de_definicao_de_sub_rotinas
         """
-    def p_program(self,p):
+    def p_parte_de_definicao_de_constante(self,p):
         """
-        program : function program
-                | function
+        parte_de_definicao_de_constante : CONST definicao_de_constante END_LINE
+                                        | CONST definicao_de_constante
+                                        | CONST definicao_de_constante END_LINE parte_de_definicao_de_constante
         """
-    def p_comentario(self, p):
-        """
-        comentario : COMMENT_MULT1 s
-                   | COMMENT_MULT2 s
-                   | COMMENT_LINE s
-        """
-        print_to_view(p);
-        pass
 
-    def p_function(self, p):
+    def p_definicao_de_constante(self,p):
         """
-        function : FUNC_DEF func_name LPAREN declaration_var RPAREN SEMICOLON return_type END_LINE declaration_var END_LINE bloco
+        definicao_de_constante : ID ASSIGN constante
         """
-        
-    def p_declaration_var(self, p):
+
+    def p_constante(self,p):
         """
-        declaration_var : VAR ids SEMICOLON type
+        constante : PLUS ID 
+                  | MINUS ID 
+                  | PLUS INTEGER
+                  | MINUS INTEGER
         """
-    def p_ids(self, p):
+
+    def p_parte_de_definicao_de_tipos(self, p):
         """
-        ids : ID
-            | ID COMMA ids
+        parte_de_definicao_de_tipos : TYPE definicao_de_tipo 
+                                    | TYPE definicao_de_tipo END_LINE
+                                    | TYPE definicao_de_tipo END_LINE parte_de_definicao_de_tipos
         """
-    def p_return_type(self, p):
+    
+    def p_definicao_de_tipo(self,p):
         """
-        return_type : type
+        definicao_de_tipo : ID ASSIGN tipo
         """
-    def p_type(self, p):
+    def p_tipo(self,p):
         """
-        type : INTEGER_TYPE 
+        tipo : ID
+             | enumerator
+             | record
+             | ARRAY LCHAVE index OF tipo RCHAVE
+             | STRING_TYPE LCHAVE INTEGER RCHAVE
+             | INTEGER_TYPE
+             | BOOLEAN_TYPE
              | FLOAT_TYPE
              | STRING_TYPE
-
+        """
+    def p_index(self,p):
+        """
+        index : INTEGER
+              | INTEGER index
+        """
+    def p_enumerator(self,p):
+        """
+        enumerator : LPAREN lista_indentificadores RPAREN
+        """
+    def p_record(self,p):
+        """
+        record : RECORD lista_de_campos BLOCO_END
+        """
+    def p_lista_de_campos(self,p):
+        """
+        lista_de_campos : lista_indentificadores SEMICOLON tipo
+                        | lista_indentificadores SEMICOLON tipo END_LINE lista_de_campos
+        """
+    def p_parte_de_definicao_de_variaveis(self,p):
+        """
+        parte_de_definicao_de_variaveis : VAR declaracao_de_variaveis 
+                                        | VAR declaracao_de_variaveis END_LINE parte_de_definicao_de_variaveis
+        """
+    def p_declaracao_de_variaveis(self,p):
+        """
+        declaracao_de_variaveis : lista_indentificadores SEMICOLON tipo
         """
 
-    def p_func_name(self, p):
+    def p_lista_indentificadores(self,p):
         """
-        func_name : ID
-        """
-        print_to_view(p);
-        
-
-    def p_bloco(self, p):
-        """
-        bloco : BLOCO_INIT instrucoes BLOCO_END
-              | BLOCO_INIT BLOCO_END
-        """
-        print_to_view(p);
-        pass
-
-    def p_instrucoes(self, p):
-        """
-        instrucoes : instrucao instrucoes
-                   | instrucao
-        """
-        print_to_view(p);
-        pass
-
-    def p_instrucao(self, p):
-        """
-        instrucao : call_func comentario
-                  | atribuir comentario
-                  | create_variable comentario
-                  | ID END_LINE comentario
-                  | if_logic comentario
-        """
-        pass
-
-    def p_if_logic(self, p):
-        """
-        if_logic : IF LPAREN logic_test RPAREN BLOCO_INIT instrucoes BLOCO_END
+        lista_indentificadores : ID
+                               | ID COMMA lista_indentificadores
         """
 
-    def p_logic_test(self, p):
+    def p_parte_de_definicao_de_sub_rotinas(self,p):
         """
-        logic_test : logic OR logic_test
-                   | NOT logic OR logic_test
-                   | logic AND logic_test
-                   | NOT logic AND logic_test
-                   | logic
-                   | NOT logic
+        parte_de_definicao_de_sub_rotinas : parte_de_definicao_de_sub_rotina
+                                          | parte_de_definicao_de_sub_rotina parte_de_definicao_de_sub_rotinas
         """
-
-    def p_logic(self, p):
+    def p_parte_de_definicao_de_sub_rotina(self,p):
         """
-        logic : TRUE
-              | FALSE
-              | ID DIF ID
-              | ID EQCOMP ID
-              | ID MENOR_QUE ID
-              | ID MENOR_IGUAL ID
-              | ID MAIOR_QUE ID
-              | ID MAIOR_IGUAL ID
+        parte_de_definicao_de_sub_rotina : declaracao_de_procedimento END_LINE
+                                         | declaracao_de_funcao END_LINE
         """
 
-    def p_atribuir(self, p):
+    def p_declaracao_de_procedimento(self,p):
         """
-        atribuir : ID ASSIGN ID END_LINE
-                 | ID ASSIGN call_func
-                 | ID ASSIGN mat_result
+        declaracao_de_procedimento : PROCEDURE ID LCHAVE parametros_formais RCHAVE END_LINE bloco
         """
-        print_to_view(p);
-    def p_call_func(self, p):
+    def p_declaracao_de_funcao(self, p):
         """
-        call_func : ID LPAREN variaveis RPAREN END_LINE
-                  | READ LPAREN variaveis RPAREN END_LINE
-                  | READLN LPAREN variaveis RPAREN END_LINE
-                  | WRITE LPAREN variaveis RPAREN END_LINE 
-                  | WRITELN LPAREN variaveis RPAREN END_LINE
-                  | SIZE LPAREN variaveis RPAREN END_LINE
+        declaracao_de_funcao : FUNC_DEF ID LPAREN parametros_formais RPAREN SEMICOLON tipo END_LINE parametros_formais bloco
+                             | FUNC_DEF ID LPAREN parametros_formais RPAREN END_LINE parametros_formais bloco
+        """
+    def p_parametros_formais(self,p):
+        """
+        parametros_formais : secao_de_parametros_formais 
+                           | secao_de_parametros_formais END_LINE parametros_formais
+                           | 
+        """
+    def p_secao_de_parametros_formais(self,p):
+        """
+        secao_de_parametros_formais : lista_indentificadores SEMICOLON tipo END_LINE
+                                    | VAR lista_indentificadores SEMICOLON tipo END_LINE
+        """
+    def p_comandos_compostos(self,p):
+        """
+        comandos_compostos : BLOCO_INIT comandos BLOCO_END
+        """
+    def p_comandos(self,p):
+        """
+        comandos : comando END_LINE comandos
+                 | comando END_LINE
+                 |
+        """
+    def p_comando(self,p):
+        """
+        comando : atribuicao
+                | chamada_de_procedimento
+                | comando_composto
+                | comando_condicional_1
+                | comando_condicional_2
+                | comando_repetitivo_1
+                | comando_repetitivo_2
+                | comando_repetitivo_3
+        """
+    def p_comando_composto(self,p):
+        """
+        comando_composto : BLOCO_INIT comandos BLOCO_END
+        """
+    def p_atribuicao(self,p):
+        """
+        atribuicao : variavel ASSIGN expressao
+        """
+    def p_chamada_de_procedimento(self,p):
+        """
+        chamada_de_procedimento : ID
+                                | ID LPAREN lista_de_expressoes RPAREN
+                                | WRITE LPAREN lista_de_expressoes RPAREN
+                                | WRITELN LPAREN lista_de_expressoes RPAREN
+                                | READLN LPAREN lista_de_expressoes RPAREN
+                                | READLN 
+                                | READ LPAREN lista_de_expressoes RPAREN
+        """
+    def p_comando_condicional_1(self,p):
+        """
+        comando_condicional_1 : IF expressao THEN comandos
+                              | IF expressao THEN comandos ELSE comando
+        """
+    def p_elementos_do_case(self,p):
+        """
+        elementos_do_case : elemento_do_case
+                          | elemento_do_case END_LINE elementos_do_case
+        """
+    def p_comando_condicional_2(self,p):
+        """
+        comando_condicional_2 : CASE expressao OF elementos_do_case  BLOCO_END
         """
 
-    def p_mat_result(self, p):
+    def p_elemento_do_case(self,p):
         """
-        mat_result : type_and_id mat_operator type_and_id
+        elemento_do_case : constante
+                         | constante COMMA elemento_do_case SEMICOLON comandos
         """
-    def p_mat_operator(self, p):
+    def p_comando_repetitivo_1(self,p):
         """
-        mat_operator : PLUS
-                     | MINUS
-                     | MOD
-                     | DIVISION
-                     | TIMES
+        comando_repetitivo_1 : WHILE expressao DO comandos
         """
-    def p_type_and_id(self, p):
+    def p_comando_repetitivo_2(self,p):
         """
-        type_and_id : ID
-                    | INTEGER
-                    | FLOAT
+        comando_repetitivo_2 : FOR ID ASSIGN expressao TO expressao DO comando
+                             | FOR ID ASSIGN expressao DOWNTO expressao DO comando
         """
-    def p_variaveis(self, p):
+    def p_comando_repetitivo_3(self,p):
         """
-        variaveis : variavel 
-                  | variavel COMMA variaveis
-        """
-        pass
-
-    def p_variavel(self, p):
-        """
-        variavel : ID
-                 | STRING
-        """
-        pass
-
-    def p_create_variable(self, p):
-        """
-        create_variable : BOOLEAN_TYPE ID assign
-                        | INTEGER_TYPE ID assign
-                        | FLOAT_TYPE ID assign
-                        | STRING_TYPE ID assign
+        comando_repetitivo_3 : REPEAT comandos
+                             | REPEAT comandos UNTIL expressao
         """
 
-    def p_assign(self, p):
+    def p_expressao(self, p):
         """
-        assign : ASSIGN call_func
-               | ASSIGN INTEGER END_LINE
-               | ASSIGN FLOAT END_LINE
+        expressao : expressao_simples 
+                  | expressao_simples relacao expressao_simples
+                  | ID relacao ID
+                  | ID relacao fator
+                  | READLN
+                  | READ
+        """
 
+    def p_relacao(self,p):
         """
+        relacao : EQCOMP
+                | DIF
+                | MENOR_QUE
+                | MENOR_IGUAL
+                | MAIOR_IGUAL
+                | MAIOR_QUE
+        """
+    def p_expressao_simples(self,p):
+        """
+        expressao_simples : termo
+                          | PLUS termo
+                          | MINUS termo
+                          | PLUS termo PLUS termo
+                          | PLUS termo MINUS termo
+                          | PLUS termo OR termo
+                          | MINUS termo PLUS termo
+                          | MINUS termo MINUS termo
+                          | MINUS termo OR termo
+        """
+    def p_termo(self,p):
+        """
+        termo : fator 
+              | fator TIMES fator
+              | fator DIV fator
+              | fator AND fator
+              | fator DIVISION fator
+        """
+    def p_fator(self,p):
+        """
+        fator : variavel
+              | INTEGER
+              | FLOAT
+              | STRING
+              | CHAR
+              | chamada_de_funcao
+              | LPAREN expressao RPAREN
+              | NOT fator
+        """
+    def p_variavel(self,p):
+        """
+        variavel : ID 
+                 | ID LPAREN expressao RPAREN
+                 | ID LPAREN campo RPAREN
+        """
+    def p_lista_de_expressoes(self,p):
+        """
+        lista_de_expressoes : expressao 
+                            | expressao COMMA lista_de_expressoes
+        """
+    def p_chamada_de_funcao(self, p):
+        """
+        chamada_de_funcao : ID
+                          | ID lista_de_expressoes
+        """
+    def p_campo(self, p):
+        """
+        campo : ID
+        """
+
+
 
     def p_error(self, p):
         print(f"Syntax error in input!'{p}'")

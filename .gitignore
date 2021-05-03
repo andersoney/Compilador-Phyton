@@ -138,3 +138,4 @@ parsetab.py
 /__pycache__/
 /compilador.rar
 /*.out
+/*.pdf

@@ -10,6 +10,11 @@ class AnalizeLexico(object):
         'integer': 'INTEGER_TYPE',
         'real': 'FLOAT_TYPE',
         'string': 'STRING_TYPE',
+        'const': 'CONST',
+        'type': 'TYPE',
+        # 'enumerator': 'ENUMERATOR',
+        'record': 'RECORD',
+        'array': 'ARRAY',
         'var': 'VAR',
         'false': 'FALSE',
         'true': 'TRUE',
@@ -19,20 +24,26 @@ class AnalizeLexico(object):
         'writeln': 'WRITELN',
         'readln': 'READLN',
         'program': 'PROGRAM',
+        'procedure': 'PROCEDURE',
         'function': 'FUNC_DEF',
         'begin': 'BLOCO_INIT',
         'end': 'BLOCO_END',
         'if': "IF",
+        'else': "ELSE",
         'then': "THEN",
         'or': "OR",
         'and': "AND",
+        'div': "DIV",
         'not': "NOT",
         'while': "WHILE",
         'do': "DO",
         'case': "CASE",
         'of': "OF",
+        'for': "FOR",
         'repeat': "REPEAT",
         'until': "UNTIL",
+        'to': "TO",
+        'downto': "DOWNTO",
     }
 
     aritmetcs_token = [
@@ -41,6 +52,7 @@ class AnalizeLexico(object):
         'TIMES',
         'DIVISION',
         'MOD',
+        'EOF'
     ]
     t_PLUS = r'\+'
     t_MINUS = r'-'
@@ -55,8 +67,9 @@ class AnalizeLexico(object):
         'MAIOR_QUE',
         'MAIOR_IGUAL',
     ]
+    t_EOF=r'\.'
     t_DIF = r'\<\>'
-    t_EQCOMP = r"=="
+    t_EQCOMP = r"="
     t_MENOR_QUE = r'<'
     t_MENOR_IGUAL = r'<='
     t_MAIOR_QUE = r'>'
@@ -65,10 +78,11 @@ class AnalizeLexico(object):
     numeric_type = [
         'FLOAT',
         'INTEGER',
+        'CHAR',
     ]
     digit = r'([0-9])'
     nondigit = r'([_A-Za-z])'
-
+    t_CHAR=nondigit
     @TOKEN(r'\d+\.\d*')
     def t_FLOAT(self, t):
         t.value = float(t.value)
@@ -81,6 +95,8 @@ class AnalizeLexico(object):
     tokens = [
         'LPAREN',
         'RPAREN',
+        'LCHAVE',
+        'RCHAVE',
         'END_LINE',
         # 'NEW_LINE',
         'STRING',
@@ -95,13 +111,15 @@ class AnalizeLexico(object):
     ] + numeric_type + logic_tokens + aritmetcs_token + list(reserved.values())
     t_LPAREN = r'\('
     t_RPAREN = r'\)'
+    t_LCHAVE = r'\['
+    t_RCHAVE = r'\]'
     t_END_LINE = r';'
     # t_NEW_LINE = r'\n'
     t_STRING = r'([\"].*[\"])|([\'].*[\'])'
     t_ASSIGN = r':='
-    t_COMMENT_MULT1 = r'\{((.*)\n)*(.*)\}'
-    t_COMMENT_MULT2 = r'\(\*((.*)\n)*(.*)\*\)'
-    t_COMMENT_LINE = r'\/\/.*\n'
+    t_ignore_COMMENT_MULT1 = r'\{((^[}]*)\n)*(.*)\}'
+    t_ignore_COMMENT_MULT2 = r'\(\*((^[)]*)\n)*(^[{}]*)\*\)'
+    t_ignore_COMMENT_LINE = r'\/\/.*\n'
     # t_FILE = r'[.*]'
     t_COMMA = r','
     t_SEMICOLON = r':'

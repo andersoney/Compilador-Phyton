@@ -20,6 +20,7 @@ logSintatico = logging.getLogger()
 
 f = open("teste1.pp", "r")
 data=f.read();
+print(data);
 m = AnalizeLexico(debuglog=logLexico)
 m.build()           # Build the lexer
 m.test(data)     # Test it
