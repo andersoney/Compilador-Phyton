@@ -42,7 +42,7 @@ begin
         cont:=0;
         while cont<10 do  {temos aqui uma repetição dentro de outra}
         begin
-            writeln((num*4)*2,' x ',cont,' = ',(num*cont)*(6*2));
+            writeln((num*4)*2,' x ',cont,' = ',num*cont*6*2);
             cont:=cont+1; {a cada repetição o cont aumenta +1}
         end;
         readkey; {parada para ver o resultado até ser teclado algo}

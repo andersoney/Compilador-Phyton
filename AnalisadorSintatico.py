@@ -236,10 +236,10 @@ class AnalisadorSintatico:
     def p_termo(self,p):
         """
         termo : fator 
-              | fator TIMES fator
-              | fator DIV fator
-              | fator AND fator
-              | fator DIVISION fator
+              | termo TIMES termo
+              | termo DIV termo
+              | termo AND termo
+              | termo DIVISION termo
         """
     def p_fator(self,p):
         """
